@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { doc, getDoc, setDoc, getFirestore } from "firebase/firestore";
 import {
   getAuth,
   signInWithPopup,
@@ -7,7 +8,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyA-zX0Ox-i50cVobXl9-3pqojTM8sYN6Uo",
   authDomain: "ztm-shop-2022.firebaseapp.com",
@@ -29,3 +30,33 @@ provider.setCustomParameters({
 export const firebaseAuth = getAuth();
 export const signInWithGooglePopUp = () =>
   signInWithPopup(firebaseAuth, provider);
+
+// Firestore configuration
+export const db = getFirestore();
+export const createUserDocFromAuth = async (userAuth) => {
+  // creating a document [It won't store to the firestore immediately, It just create a instance]
+  const userDocRef = doc(db, "User", userAuth.uid);
+
+  // It will return a snapShot Object if the document exist
+  const userSnapshot = await getDoc(userDocRef);
+
+  // If Document doesn't exist try to create a new one
+  if (!userSnapshot.exists()) {
+    try {
+      // getting some fields from Firebase Auth to store User data fields in firestore User collection
+      const { displayName, email } = userAuth;
+      const createdAt = new Date();
+
+      // Storing UserDoc into Firestore. setDoc(docInstance, {data fields Object})
+      await setDoc(userDocRef, {
+        displayName,
+        email,
+        createdAt,
+      });
+    } catch (e) {
+      console.log("Error Creating User => " + e.message);
+    }
+  }
+
+  return userDocRef;
+};
