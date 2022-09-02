@@ -6,6 +6,7 @@ import {
   signInWithPopup,
   signInWithRedirect,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 // Firebase configuration
@@ -36,7 +37,12 @@ export const signInWithGoogleRedirect = () =>
 
 // Firestore configuration
 export const db = getFirestore();
-export const createUserDocFromAuth = async (userAuth) => {
+export const createUserDocFromAuth = async (
+  userAuth,
+  additionalInfoObject = {}
+) => {
+  if (!userAuth) return;
+
   // creating a document [It won't store to the firestore immediately, It just create a instance]
   const userDocRef = doc(db, "User", userAuth.uid);
 
@@ -55,6 +61,7 @@ export const createUserDocFromAuth = async (userAuth) => {
         displayName,
         email,
         createdAt,
+        ...additionalInfoObject,
       });
     } catch (e) {
       console.log("Error Creating User => " + e.message);
@@ -62,4 +69,8 @@ export const createUserDocFromAuth = async (userAuth) => {
   }
 
   return userDocRef;
+};
+export const createAuthUserFromEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+  return await createUserWithEmailAndPassword(firebaseAuth, email, password);
 };
