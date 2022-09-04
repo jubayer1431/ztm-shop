@@ -5,23 +5,31 @@ import {
   createUserDocFromAuth,
 } from "../../utils/Firebase/firebase";
 import FormInput from "../FormInput/FormInput";
+import Button from "../Button/Button";
 
 const SignUp = () => {
-  const defaultFormFieldsData = {
+  const defaultSignupFormFieldsData = {
     displayName: "",
     email: "",
     password: "",
     confirmPassword: "",
   };
 
-  const [formFieldsData, setFormFieldsData] = useState(defaultFormFieldsData);
-  const { displayName, email, password, confirmPassword } = formFieldsData;
+  const [signupFormFieldsData, setSignupFormFieldsData] = useState(
+    defaultSignupFormFieldsData
+  );
+  const { displayName, email, password, confirmPassword } =
+    signupFormFieldsData;
 
-  const clearInputs = () => setFormFieldsData(defaultFormFieldsData);
+  const clearInputs = () =>
+    setSignupFormFieldsData(defaultSignupFormFieldsData);
 
   const handleChange = (e) => {
-    setFormFieldsData({ ...formFieldsData, [e.target.name]: e.target.value });
-    // console.log(formFieldsData);
+    setSignupFormFieldsData({
+      ...signupFormFieldsData,
+      [e.target.name]: e.target.value,
+    });
+    // console.log(signupFormFieldsData);
   };
 
   const handleSubmit = async (e) => {
@@ -52,8 +60,9 @@ const SignUp = () => {
   };
 
   return (
-    <div>
-      <h1>Sign Up With Your Email and Password</h1>
+    <div className={"sign-up-container"}>
+      <h2>Don't Have An Account</h2>
+      <span>Sign Up With Your Email And Password</span>
       <form onSubmit={handleSubmit}>
         <FormInput
           label={"Display Name"}
@@ -90,7 +99,7 @@ const SignUp = () => {
           value={confirmPassword}
           onChange={handleChange}
         />
-        <button type={"submit"}>Sign Up</button>
+        <Button type={"submit"}>Sign Up</Button>
       </form>
     </div>
   );
