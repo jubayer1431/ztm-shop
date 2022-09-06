@@ -8,6 +8,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 
 // Firebase configuration
@@ -79,4 +80,8 @@ export const createAuthUserFromEmailAndPassword = async (email, password) => {
 export const createSignInWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
   return await signInWithEmailAndPassword(firebaseAuth, email, password);
+};
+
+export const signOutFromFirebaseAuth = async () => {
+  return await signOut(firebaseAuth);
 };
