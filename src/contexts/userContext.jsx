@@ -16,8 +16,7 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     return onAuthStateChangedObserverListener((user) => {
       if (user) {
-        const userDocRef = createUserDocFromAuth(user);
-        console.log(userDocRef);
+        createUserDocFromAuth(user);
       }
       setCurrentUser(user);
     });

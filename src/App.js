@@ -5,6 +5,8 @@ import HomeRoutes from "./routes/HomeRoutes/HomeRoutes";
 import NavigationRoutes from "./routes/NavigationRoutes/NavigationRoutes";
 import AuthenticationRoutes from "./routes/AuthenticationRoutes/AuthenticationRoutes";
 import ShopRoutes from "./routes/ShopRoutes/ShopRoutes";
+import CheckoutRoutes from "./routes/CheckoutRoutes/CheckoutRoutes";
+
 const App = () => {
   return (
     <Routes>
@@ -12,6 +14,7 @@ const App = () => {
         <Route index element={<HomeRoutes />} />
         <Route path={"shop"} element={<ShopRoutes />} />
         <Route path={"auth"} element={<AuthenticationRoutes />} />
+        <Route path={"checkout"} element={<CheckoutRoutes />} />
       </Route>
     </Routes>
   );
