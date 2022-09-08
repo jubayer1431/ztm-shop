@@ -73,6 +73,8 @@ export const createUserDocFromAuth = async (
 
   return userDocRef;
 };
+
+// Firebase Auth methods
 export const createAuthUserFromEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
   return await createUserWithEmailAndPassword(firebaseAuth, email, password);
