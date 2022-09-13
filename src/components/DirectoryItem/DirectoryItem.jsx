@@ -1,14 +1,14 @@
-import "./_Category.scss";
-const Category = ({ imageUrl, title }) => {
+import "./_DirectoryItem.scss";
+const DirectoryItem = ({ imageUrl, title }) => {
   // This component only used in Directory Component. It's only for homepage
 
   return (
-    <div className="category-container bg-red-800	 p-4">
+    <div className="directory-item-container bg-red-800	 p-4">
       <div
         className="background-image "
         style={{ backgroundImage: `url(${imageUrl})` }}
       />
-      <div className="category-body-container">
+      <div className="directory-item-body">
         <h2>{title}</h2>
         <p>Shop Now</p>
       </div>
@@ -16,4 +16,4 @@ const Category = ({ imageUrl, title }) => {
   );
 };
 
-export default Category;
+export default DirectoryItem;
