@@ -1,5 +1,7 @@
-import "./categories.scss";
+import "./_Category.scss";
 const Category = ({ imageUrl, title }) => {
+  // This component only used in Directory Component. It's only for homepage
+
   return (
     <div className="category-container bg-red-800	 p-4">
       <div
