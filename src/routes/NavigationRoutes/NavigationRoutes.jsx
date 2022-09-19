@@ -1,6 +1,11 @@
 import React, { Fragment, useContext } from "react";
-import "./_NavigationRoutes.scss";
-import { Link, Outlet } from "react-router-dom";
+import {
+  LogoContainer,
+  NavigationContainer,
+  NavLinkContainer,
+  NavLinksContainer,
+} from "./NavigationRoutes.styles";
+import { Outlet } from "react-router-dom";
 import { ReactComponent as Logo } from "./../../assets/crown.svg";
 import { UserContext } from "../../contexts/userContext";
 import { signOutFromFirebaseAuth } from "../../utils/Firebase/firebase";
@@ -14,28 +19,23 @@ const NavigationRoutes = () => {
 
   return (
     <Fragment>
-      {/*// We Use Fragment Component just because we have to use a parent. We can use use div, But, div will create extra parent div in actual HTML and Fragment component will not create anything.*/}
-      <div className="navigation">
-        <Link className="logo-container" to={"/"}>
+      <NavigationContainer>
+        <LogoContainer to={"/"}>
           <Logo className={"logo"} />
-        </Link>
-        <div className="nav-links-container">
-          <Link className={"nav-link"} to={"/shop"}>
-            SHOP
-          </Link>
+        </LogoContainer>
+        <NavLinksContainer>
+          <NavLinkContainer to={"/shop"}>SHOP</NavLinkContainer>
           {currentUser ? (
-            <span className={"nav-link"} onClick={signOutFromFirebaseAuth}>
+            <NavLinkContainer as={"span"} onClick={signOutFromFirebaseAuth}>
               SIGN OUT
-            </span>
+            </NavLinkContainer>
           ) : (
-            <Link className={"nav-link"} to={"/auth"}>
-              SIGN IN
-            </Link>
+            <NavLinkContainer to={"/auth"}>SIGN IN</NavLinkContainer>
           )}
           <CartIcon />
-        </div>
+        </NavLinksContainer>
         {isCartOpen && <CartDropdown />}
-      </div>
+      </NavigationContainer>
       <Outlet />
     </Fragment>
   );

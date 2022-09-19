@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CategoriesContext } from "../../contexts/categoriesContext";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import "./_CategoryRoutes.scss";
+import { CategoryContainer, Title } from "./CategoryRoutes.styles";
 
 const CategoryRoutes = () => {
   const { category } = useParams();
@@ -18,8 +18,8 @@ const CategoryRoutes = () => {
 
   return (
     <>
-      <h2 className={"category-title"}>{category.toUpperCase()}</h2>
-      <div className={"category-container"}>
+      <Title>{category.toUpperCase()}</Title>
+      <CategoryContainer>
         {/*we have to use safe-guards because our categoriesMap from CategoriesContext
       relies on async code. That's why categoriesMap is empty when components is
       rendered first time. that's why we also used dependency array in useEffect
@@ -28,7 +28,7 @@ const CategoryRoutes = () => {
           products.map((product) => (
             <ProductCard product={product} key={product.id} />
           ))}
-      </div>
+      </CategoryContainer>
     </>
   );
 };

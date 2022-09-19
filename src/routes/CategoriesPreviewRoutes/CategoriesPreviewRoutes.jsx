@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import "./_CategoriesPreviewRoutes.scss";
 import { CategoriesContext } from "../../contexts/categoriesContext";
 import CategoryPreview from "../../components/CategoryPreview/CategoryPreview";
 
