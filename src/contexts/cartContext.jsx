@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useReducer } from "react";
+import { createAction } from "../utils/Reducer/reducer.utils";
 
 // Actual Context
 export const CartContext = createContext({
@@ -12,17 +13,12 @@ export const CartContext = createContext({
 });
 
 // Helper Functions
-
 const addToCart = (cartItems, productToAdd) => {
   // 1) Check if item exists in cartItems
-  const existedItem = cartItems.find((item) => item.id === productToAdd.id);
+  const existedItem = cartItems?.find((item) => item.id === productToAdd.id);
 
   if (existedItem) {
     // 2) if item exists modify item quantity
-
-    //        existedItem.quantity += 1;
-    //        setCartItems([...cartItems]);
-
     const modifiedCartItems = cartItems.map((item) =>
       item.id === productToAdd.id
         ? { ...item, quantity: item.quantity + 1 }
@@ -35,45 +31,70 @@ const addToCart = (cartItems, productToAdd) => {
   return [...cartItems, { ...productToAdd, quantity: 1 }];
 };
 
+const CART_ACTION_TYPES = {
+  SET_IS_CART_OPEN: "SET_IS_CART_OPEN",
+  SET_CART_ITEMS: "SET_CART_ITEMS",
+  SET_CART_ITEMS_COUNT: "SET_CART_ITEMS_COUNT",
+  SET_CART_TOTAL: "SET_CART_TOTAL",
+};
+
+const cartReducer = (state, action) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case CART_ACTION_TYPES.SET_IS_CART_OPEN:
+      return { ...state, isCartOpen: payload };
+    case CART_ACTION_TYPES.SET_CART_ITEMS:
+      return { ...state, ...payload };
+    default:
+      throw new Error(`Unhandled ${type} in Car Reducer`);
+  }
+};
+
+const INITIAL_STATE = {
+  isCartOpen: false,
+  cartItems: [],
+  cartItemsCount: 0,
+  cartTotal: 0,
+};
+
 // Provider Component
 export const CartContextProvider = ({ children }) => {
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
-  const [cartItemsCount, setCartItemsCount] = useState(0);
-  const [cartTotal, setCartTotal] = useState(0);
+  const [{ isCartOpen, cartItems, cartItemsCount, cartTotal }, dispatch] =
+    useReducer(cartReducer, INITIAL_STATE);
 
-  // useEffect Should Have single responsibility. This is the best practice. Otherwise we can use setCartItemsCount and setCartTotal in one useEffect
-
-  useEffect(() => {
-    // set cartItemsCount everytime when cartItems value changes or modified
-    setCartItemsCount(
-      cartItems.reduce((total, currentItem) => total + currentItem.quantity, 0)
+  const updateCartItemsReducer = (newCartItems) => {
+    const newCartTotal = newCartItems.reduce(
+      (total, currentItem) => total + currentItem.quantity * currentItem.price,
+      0
     );
-  }, [cartItems]);
 
-  useEffect(() => {
-    // set cartItems Total Price everytime when cartItems value changes or modified
-    setCartTotal(
-      cartItems.reduce(
-        (total, currentItem) =>
-          total + currentItem.quantity * currentItem.price,
-        0
-      )
+    const newItemsCount = newCartItems.reduce(
+      (total, currentItem) => total + currentItem.quantity,
+      0
     );
-  }, [cartItems]);
+
+    dispatch(
+      createAction(CART_ACTION_TYPES.SET_CART_ITEMS, {
+        cartItems: newCartItems,
+        cartItemsCount: newItemsCount,
+        cartTotal: newCartTotal,
+      })
+    );
+  };
+
+  const setIsCartOpen = (isOpen) => {
+    dispatch(createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN, isOpen));
+  };
 
   const removeItemFromCart = (productToRemove) => {
     const filteredCartItems = cartItems.filter(
       (item) => item.id !== productToRemove.id
     );
-    setCartItems([...filteredCartItems]);
+    updateCartItemsReducer(filteredCartItems);
   };
 
   const decreaseItemFromCart = (productToDecrease) => {
-    // const existedItem = cartItems.find(
-    //   (item) => item.id === productToDecrease.id
-    // );
-
     if (productToDecrease.quantity > 1) {
       const modifiedCartItems = cartItems.map((item) =>
         item.id === productToDecrease.id
@@ -81,14 +102,16 @@ export const CartContextProvider = ({ children }) => {
           : item
       );
 
-      setCartItems([...modifiedCartItems]);
+      updateCartItemsReducer(modifiedCartItems);
     } else {
       removeItemFromCart(productToDecrease);
     }
   };
 
-  const addItemToCart = (productToAdd) =>
-    setCartItems(addToCart(cartItems, productToAdd));
+  const addItemToCart = (productToAdd) => {
+    const newCartItems = addToCart(cartItems, productToAdd);
+    updateCartItemsReducer(newCartItems);
+  };
 
   const value = {
     isCartOpen,
