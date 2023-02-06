@@ -1,4 +1,5 @@
 import React, { Fragment, useContext } from "react";
+import {useSelector} from 'react-redux';
 import {
   LogoContainer,
   NavigationContainer,
@@ -7,14 +8,14 @@ import {
 } from "./NavigationRoutes.styles";
 import { Outlet } from "react-router-dom";
 import { ReactComponent as Logo } from "./../../assets/crown.svg";
-import { UserContext } from "../../contexts/userContext";
 import { signOutFromFirebaseAuth } from "../../utils/Firebase/firebase";
 import CartIcon from "../../components/CartIcon/CartIcon";
 import CartDropdown from "../../components/CartDropdown/CartDropdown";
 import { CartContext } from "../../contexts/cartContext";
+import {userSelector} from './../../store/user/userSelector';
 
 const NavigationRoutes = () => {
-  const { currentUser } = useContext(UserContext);
+  const currentUser  = useSelector(userSelector);
   const { isCartOpen } = useContext(CartContext);
 
   return (

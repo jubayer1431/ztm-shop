@@ -6,8 +6,26 @@ import NavigationRoutes from "./routes/NavigationRoutes/NavigationRoutes";
 import AuthenticationRoutes from "./routes/AuthenticationRoutes/AuthenticationRoutes";
 import ShopRoutes from "./routes/ShopRoutes/ShopRoutes";
 import CheckoutRoutes from "./routes/CheckoutRoutes/CheckoutRoutes";
+import { useEffect } from "react";
+import {
+  createUserDocFromAuth,
+  onAuthStateChangedObserverListener,
+} from "./utils/Firebase/firebase";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "./store/user/userAction";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    return onAuthStateChangedObserverListener((user) => {
+      if (user) {
+        createUserDocFromAuth(user);
+      }
+      dispatch(setCurrentUser(user));
+    });
+  }, []);
+
   return (
     <Routes>
       <Route path={"/"} element={<NavigationRoutes />}>
